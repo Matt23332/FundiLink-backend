@@ -17,10 +17,13 @@ Route::resource('users', UserController::class)->only(['index']);
 // Other routes
 Route::resource('roles', RoleController::class);
 Route::resource('services', ServiceController::class);
-Route::resource('service-requests', ServiceRequestController::class);
+// Route::resource('service-requests', ServiceRequestController::class);
+// Route::patch('service-requests/{id}/cancel', [ServiceRequestController::class, 'cancel']);
 Route::resource('reviews', ReviewsController::class);
 Route::resource('categories', CategoriesController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::resource('service-requests', ServiceRequestController::class);
+    Route::patch('service-requests/{id}/cancel', [ServiceRequestController::class, 'cancel']);
 });
