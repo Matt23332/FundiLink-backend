@@ -22,4 +22,8 @@ class Service extends Model
     {
         return $this->hasMany(Reviews::class);
     }
+
+    public function getImageAttribute($value) {
+        return asset('storage/' . $value);
+    }
 }
