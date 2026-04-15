@@ -12,7 +12,7 @@ use App\Http\Controllers\CategoriesController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::resource('users', UserController::class)->only(['index']);
+// Route::resource('users', UserController::class);
 
 // Other routes
 Route::resource('roles', RoleController::class);
@@ -23,6 +23,7 @@ Route::resource('reviews', ReviewsController::class);
 Route::resource('categories', CategoriesController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('users', UserController::class);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::resource('service-requests', ServiceRequestController::class);
     Route::patch('service-requests/{id}/cancel', [ServiceRequestController::class, 'cancel']);
