@@ -27,6 +27,7 @@ class ServiceRequestController extends Controller
             'status' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'price' => 'nullable|numeric',
         ]);
 
         $serviceRequests = ServiceRequests::create($validated);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('address');
             $table->text('description')->nullable();
+            $table->integer('price')->nullable();
             $table->timestamps();
         });
     }
