@@ -24,7 +24,7 @@ Route::resource('categories', CategoriesController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('users', UserController::class);
-    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('service-requests', ServiceRequestController::class);
     Route::patch('service-requests/{id}/cancel', [ServiceRequestController::class, 'cancel']);
 });
