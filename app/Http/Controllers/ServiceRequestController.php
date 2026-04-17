@@ -11,6 +11,20 @@ class ServiceRequestController extends Controller
     public function index() {
         $user = Auth::user();
 
+        if ($user->role === 'provider') {
+            $serviceRequests = ServiceRequest::with(['service', 'user'])
+                ->whereHas('service', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->latest()
+                ->get();
+        } else {
+            $serviceRequests = ServiceRequest::with(['service', 'user'])
+                ->where('user_id', $user->id)
+                ->latest()
+                ->get();
+        }
+
         if (!Auth::check()) {
             return response()->json(['error' => 'Unauthenticated user'], 401);
         }

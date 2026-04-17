@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Service;
+// use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth;
+
 
 class ServiceController extends Controller
 {
@@ -20,8 +23,7 @@ class ServiceController extends Controller
             'location' => 'nullable|string|max:255',
             'contact_info' => 'nullable|string|max:255',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
+            'category_id' => 'sometimes|exists:categories,id',
         ]);
 
         if ($request->hasFile('image_path')) {
@@ -30,6 +32,8 @@ class ServiceController extends Controller
             $image->move(public_path('images'), $imageName);
             $validated['image_path'] = 'images/' . $imageName;
         }
+
+        $validated['user_id'] = Auth::id();
 
         $service = Service::create($validated);
         return response()->json(['message' => 'Service created successfully', 'service' => $service], 201);
@@ -50,8 +54,7 @@ class ServiceController extends Controller
             'location' => 'nullable|string|max:255',
             'contact_info' => 'nullable|string|max:255',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
+            'category_id' => 'sometimes|exists:categories,id',
         ]);
 
         if ($request->hasFile('image_path')) {

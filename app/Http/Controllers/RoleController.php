@@ -8,7 +8,7 @@ use App\Models\Role;
 class RoleController extends Controller
 {
     public function __construct() {
-        $this->authorizeResource(Role::class, 'role');
+        // $this->authorizeResource(Role::class, 'role');
     }
 
     public function index() {
@@ -46,7 +46,7 @@ class RoleController extends Controller
     public function destroy($id) {
         try {
             $role = Role::findOrFail($id);
-            $this->authorize('delete', $role);
+            // $this->authorize('delete', $role);
             $role->delete();
             return response()->json(['message' => 'Role deleted successfully'], 200);
         } catch (\Exception $e) {
