@@ -25,7 +25,9 @@ class User extends Authenticatable
         'confirm_password',
         'role',
         'address',
-        'phone'
+        'phone',
+
+        'is_active',
     ];
 
     /**

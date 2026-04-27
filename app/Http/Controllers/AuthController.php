@@ -5,7 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Models\Role;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\URL;
+use App\Notifications\VerifyEmailNotification;
 
 class AuthController extends Controller
 {
@@ -20,6 +23,8 @@ class AuthController extends Controller
             'address'  => 'nullable|string|max:255',
         ]);
 
+        $role = Role::where('name', $validated['role'])->first();
+
         try {
             $user = User::create([
                 'name'     => $validated['name'],
@@ -27,14 +32,24 @@ class AuthController extends Controller
                 'email'    => $validated['email'],
                 'password' => bcrypt($validated['password']),
                 'role'     => $validated['role'],
+                // 'role_id'  => $role ? $role->id : null,
                 'address'  => $validated['address'] ?? null,
+                'is_active' => false,
             ]);
+
+            $signedUrl = URL::temporarySignedRoute(
+                'verification.verify',
+                now()->addMinutes(60),
+                ['id' => $user->id, 'hash' => sha1($user->email)]
+            );
+
+            $user->notify(new VerifyEmailNotification($signedUrl));
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'user'         => $user,
-                'message'      => 'User registered successfully',
+                'message'      => 'User registered successfully. Please check your email to verify it is you.',
                 'access_token' => $token,
                 'token_type'   => 'Bearer',
             ], 201);
@@ -58,6 +73,10 @@ class AuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials'],
             ]);
+        }
+
+        if (!$user->is_active) {
+            return response()->json(['message' => 'Please verify your email before logging in.'], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;

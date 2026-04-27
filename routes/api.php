@@ -9,10 +9,18 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\VerifyEmailController;
+use App\Http\Controllers\ResendEmailVerificationController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 // Route::resource('users', UserController::class);
+Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+    ->name('verification.verify')
+    ->middleware(['signed', 'throttle:6,1']);
+Route::post('/email/resend', [ResendEmailVerificationController::class, 'resend'])
+    ->name('verification.resend')
+    ->middleware('throttle:6,1');
 
 // Other routes
 Route::resource('roles', RoleController::class);
