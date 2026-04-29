@@ -11,6 +11,8 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResendEmailVerificationController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,6 +23,8 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify']
 Route::post('/email/resend', [ResendEmailVerificationController::class, 'resend'])
     ->name('verification.resend')
     ->middleware('throttle:6,1');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
+Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
 // Other routes
 Route::resource('roles', RoleController::class);
