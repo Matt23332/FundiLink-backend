@@ -49,7 +49,7 @@ class ServiceRequestController extends Controller
         $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
             'request_date' => 'nullable|date',
-            'status' => 'required|in:pending,reviewing,active,in-progress,completed,cancelled',
+            'status' => 'required|in:Pending,Reviewing,Active,In-Progress,Completed,Cancelled',
             'address' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric',
@@ -58,7 +58,7 @@ class ServiceRequestController extends Controller
         $validated['user_id'] = Auth::id();
 
         if (!isset($validated['status'])) {
-            $validated['status'] = 'pending';
+            $validated['status'] = 'Pending';
         }
 
         if (!isset($validated['request_date'])) {
@@ -101,7 +101,7 @@ class ServiceRequestController extends Controller
 
         $validated = $request->validate([
             'service_id' => 'sometimes|exists:services,id',
-            'status' => 'sometimes|in:pending,reviewing,active,in-progress,completed,cancelled',
+            'status' => 'sometimes|in:Pending,Reviewing,Active,In-Progress,Completed,Cancelled',
             'request_date' => 'nullable|date',
             'address' => 'nullable|string|max:255',
             'description' => 'nullable|string',
