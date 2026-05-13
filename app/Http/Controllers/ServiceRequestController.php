@@ -23,7 +23,7 @@ class ServiceRequestController extends Controller
                 ->get();
         } 
         // Providers can see requests for their services only
-        elseif ($user->role === 'provider') {
+        elseif ($user->role === 'Service Provider') {
             $serviceRequests = ServiceRequest::with(['service', 'user'])
                 ->whereHas('service', function($query) use ($user) {
                     $query->where('user_id', $user->id);
@@ -80,7 +80,7 @@ class ServiceRequestController extends Controller
         $user = Auth::user();
         if ($user->role !== 'Admin' && 
             $serviceRequest->user_id !== $user->id && 
-            !($user->role === 'provider' && $serviceRequest->service->user_id === $user->id)) {
+            !($user->role === 'Service Provider' && $serviceRequest->service->user_id === $user->id)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         
@@ -95,7 +95,7 @@ class ServiceRequestController extends Controller
         // Allow admins to update any request, providers to update requests for their services
         if ($user->role !== 'Admin' && 
             $serviceRequest->user_id !== $user->id && 
-            !($user->role === 'provider' && $serviceRequest->service->user_id === $user->id)) {
+            !($user->role === 'Service Provider' && $serviceRequest->service->user_id === $user->id)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -127,13 +127,13 @@ class ServiceRequestController extends Controller
         }
         
         // Only allow cancellation if not already completed or cancelled
-        if (!in_array($serviceRequest->status, ['pending', 'reviewing', 'active', 'in-progress'])) {
+        if (!in_array($serviceRequest->status, ['Pending', 'Reviewing', 'Active', 'In-Progress'])) {
             return response()->json([
                 'error' => 'Cannot cancel a request that is already completed or cancelled'
             ], 422);
         }
         
-        $serviceRequest->update(['status' => 'cancelled']);
+        $serviceRequest->update(['status' => 'Cancelled']);
         return response()->json(['message' => 'Service request cancelled successfully', 'service_request' => $serviceRequest], 200);
     }
 
